@@ -1,7 +1,7 @@
 import datetime
 
 from django.conf import settings
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.contrib.sites.models import Site
 from django.core import mail
 from django.core.urlresolvers import reverse
@@ -12,6 +12,8 @@ from registration.admin import RegistrationAdmin
 from registration.forms import RegistrationForm
 from registration.backends.default.views import RegistrationView
 from registration.models import RegistrationProfile
+
+User = get_user_model()
 
 
 class DefaultBackendViewTests(TestCase):

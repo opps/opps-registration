@@ -4,11 +4,13 @@ import random
 import re
 
 from django.conf import settings
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.db import models
 from django.db import transaction
 from django.template.loader import render_to_string
 from django.utils.translation import ugettext_lazy as _
+
+User = get_user_model()
 
 try:
     from django.utils.timezone import now as datetime_now
@@ -155,6 +157,7 @@ class RegistrationManager(models.Manager):
             except User.DoesNotExist:
                 profile.delete()
 
+
 class RegistrationProfile(models.Model):
     """
     A simple profile which stores an activation key for use during
@@ -173,7 +176,7 @@ class RegistrationProfile(models.Model):
     """
     ACTIVATED = u"ALREADY_ACTIVATED"
 
-    user = models.ForeignKey(User, unique=True, verbose_name=_('user'))
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, unique=True, verbose_name=_('user'))
     activation_key = models.CharField(_('activation key'), max_length=40)
 
     objects = RegistrationManager()
@@ -209,7 +212,7 @@ class RegistrationProfile(models.Model):
         """
         expiration_date = datetime.timedelta(days=settings.ACCOUNT_ACTIVATION_DAYS)
         return self.activation_key == self.ACTIVATED or \
-               (self.user.date_joined + expiration_date <= datetime_now())
+            (self.user.date_joined + expiration_date <= datetime_now())
     activation_key_expired.boolean = True
 
     def send_activation_email(self, site):
@@ -262,4 +265,3 @@ class RegistrationProfile(models.Model):
                                    ctx_dict)
 
         self.user.email_user(subject, message, settings.DEFAULT_FROM_EMAIL)
-
