@@ -14,14 +14,15 @@ if root_dir:
 for dirpath, dirnames, filenames in os.walk('registration'):
     # Ignore dirnames that start with '.'
     for i, dirname in enumerate(dirnames):
-        if dirname.startswith('.'): del dirnames[i]
+        if dirname.startswith('.'):
+            del dirnames[i]
     if '__init__.py' in filenames:
         pkg = dirpath.replace(os.path.sep, '.')
         if os.path.altsep:
             pkg = pkg.replace(os.path.altsep, '.')
         packages.append(pkg)
     elif filenames:
-        prefix = dirpath[13:] # Strip "registration/" or "registration\"
+        prefix = dirpath[13:]  # Strip "registration/" or "registration\"
         for f in filenames:
             data_files.append(os.path.join(prefix, f))
 

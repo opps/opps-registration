@@ -38,7 +38,7 @@ class RegistrationFormTests(TestCase):
                       'password1': 'foo',
                       'password2': 'bar'},
             'error': ('__all__', [u"The two password fields didn't match."])},
-            ]
+        ]
 
         for invalid_dict in invalid_data_dicts:
             form = forms.RegistrationForm(data=invalid_dict['data'])
