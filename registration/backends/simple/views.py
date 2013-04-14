@@ -3,11 +3,10 @@ from django.contrib.auth import authenticate
 from django.contrib.auth import login
 from django.contrib.auth import get_user_model
 
-from registration import signals
-from registration.views import RegistrationView as BaseRegistrationView
+from ...signals import user_registered
+from ...views import RegistrationView as BaseRegistrationView
 
-from .utils import get_or_generate_username
-
+from ...utils import get_or_generate_username
 
 User = get_user_model()
 
@@ -41,9 +40,9 @@ class RegistrationView(BaseRegistrationView):
         }
         new_user = authenticate(**data)
         login(request, new_user)
-        signals.user_registered.send(sender=self.__class__,
-                                     user=new_user,
-                                     request=request)
+        user_registered.send(sender=self.__class__,
+                             user=new_user,
+                             request=request)
         return new_user
 
     def registration_allowed(self, request):

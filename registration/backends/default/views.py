@@ -2,10 +2,10 @@ from django.conf import settings
 from django.contrib.sites.models import RequestSite
 from django.contrib.sites.models import Site
 
-from registration import signals
-from registration.models import RegistrationProfile
-from registration.views import ActivationView as BaseActivationView
-from registration.views import RegistrationView as BaseRegistrationView
+from ...signals import user_registered, user_activated
+from ...models import RegistrationProfile
+from ...views import ActivationView as BaseActivationView
+from ...views import RegistrationView as BaseRegistrationView
 
 
 class RegistrationView(BaseRegistrationView):
@@ -78,9 +78,9 @@ class RegistrationView(BaseRegistrationView):
             site = RequestSite(request)
         new_user = RegistrationProfile.objects.create_inactive_user(username, email,
                                                                     password, site)
-        signals.user_registered.send(sender=self.__class__,
-                                     user=new_user,
-                                     request=request)
+        user_registered.send(sender=self.__class__,
+                             user=new_user,
+                             request=request)
         return new_user
 
     def registration_allowed(self, request):
@@ -121,9 +121,9 @@ class ActivationView(BaseActivationView):
         """
         activated_user = RegistrationProfile.objects.activate_user(activation_key)
         if activated_user:
-            signals.user_activated.send(sender=self.__class__,
-                                        user=activated_user,
-                                        request=request)
+            user_activated.send(sender=self.__class__,
+                                user=activated_user,
+                                request=request)
         return activated_user
 
     def get_success_url(self, request, user):

@@ -7,11 +7,8 @@ from django.core import mail
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 
-from registration import signals
-from registration.admin import RegistrationAdmin
-from registration.forms import RegistrationForm
-from registration.backends.default.views import RegistrationView
-from registration.models import RegistrationProfile
+from ..forms import RegistrationForm
+from ..models import RegistrationProfile
 
 User = get_user_model()
 

@@ -22,7 +22,7 @@ from django.conf.urls import patterns
 from django.conf.urls import url
 from django.views.generic.base import TemplateView
 
-from registration.backends.simple.views import RegistrationView
+from .views import RegistrationView
 
 
 urlpatterns = patterns('',

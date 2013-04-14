@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 
-from registration.forms import RegistrationForm
+from ..forms import RegistrationForm
 
 User = get_user_model()
 
