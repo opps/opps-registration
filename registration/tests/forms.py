@@ -19,7 +19,11 @@ class RegistrationFormTests(TestCase):
         """
         # Create a user so we can verify that duplicate usernames aren't
         # permitted.
-        User.objects.create_user('alice', 'alice@example.com', 'secret')
+        User.objects.create_user(
+            username='alice',
+            email='alice@example.com',
+            password='secret'
+        )
 
         invalid_data_dicts = [
             # Non-alphanumeric username.
@@ -83,8 +87,11 @@ class RegistrationFormTests(TestCase):
         """
         # Create a user so we can verify that duplicate addresses
         # aren't permitted.
-        User.objects.create_user('alice', 'alice@example.com', 'secret')
-
+        User.objects.create_user(
+            username='alice',
+            email='alice@example.com',
+            password='secret'
+        )
         form = forms.RegistrationFormUniqueEmail(data={'username': 'foo',
                                                        'email': 'alice@example.com',
                                                        'password1': 'foo',
