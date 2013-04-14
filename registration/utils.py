@@ -3,11 +3,13 @@
 from django.contrib.auth import get_user_model
 
 
-def generate_username(user):
+def get_or_generate_username(user):
     """
     generates a new username based in User email and pk
     this is for the cases where username is not required
     """
+    if user.username and user.username is not None:
+        return user.username
 
     User = get_user_model()
 
