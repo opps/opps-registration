@@ -4,6 +4,7 @@ Views which allow users to create and activate accounts.
 """
 
 from django.shortcuts import redirect
+from django.core.urlresolvers import reverse
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import FormView
 
