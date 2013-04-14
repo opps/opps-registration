@@ -24,7 +24,13 @@ class RegistrationView(BaseRegistrationView):
             email=email,
             password=password
         )
-        new_user = authenticate(username=username, password=password)
+        # if the default username_field is not 'username'
+        username_field = getattr(User, 'USERNAME_FIELD', 'username')
+        data = {
+            username_field: cleaned_data[username_field],
+            'password': password
+        }
+        new_user = authenticate(**data)
         login(request, new_user)
         signals.user_registered.send(sender=self.__class__,
                                      user=new_user,
