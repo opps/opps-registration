@@ -2,7 +2,8 @@ include CHANGELOG
 include INSTALL
 include LICENSE
 include MANIFEST.in
-include README
+include README.md
 include AUTHORS
+include opps/registration/templates/registration/*
 recursive-include docs *
-recursive-include registration/locale *
+recursive-include opps/registration/locale *
