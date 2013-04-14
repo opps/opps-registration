@@ -86,6 +86,10 @@ class RegistrationManager(models.Manager):
         )
         new_user.is_active = False
         new_user.save()
+        # ensure username for cases qhere email is the USERNAME_FIELD
+        if not new_user.username or new_user.username is None:
+            new_user.username = get_or_generate_username(new_user)
+            new_user.save()
 
         registration_profile = self.create_profile(new_user)
 

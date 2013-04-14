@@ -6,6 +6,9 @@ from django.contrib.auth import get_user_model
 from registration import signals
 from registration.views import RegistrationView as BaseRegistrationView
 
+from .utils import get_or_generate_username
+
+
 User = get_user_model()
 
 
@@ -19,11 +22,17 @@ class RegistrationView(BaseRegistrationView):
     """
     def register(self, request, **cleaned_data):
         username, email, password = cleaned_data['username'], cleaned_data['email'], cleaned_data['password1']
-        User.objects.create_user(
+        new_user = User.objects.create_user(
             username=username,
             email=email,
             password=password
         )
+
+        # ensure username for cases qhere email is the USERNAME_FIELD
+        if not new_user.username or new_user.username is None:
+            new_user.username = get_or_generate_username(new_user)
+            new_user.save()
+
         # if the default username_field is not 'username'
         username_field = getattr(User, 'USERNAME_FIELD', 'username')
         data = {
