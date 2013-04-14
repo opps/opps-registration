@@ -10,6 +10,8 @@ from django.db import transaction
 from django.template.loader import render_to_string
 from django.utils.translation import ugettext_lazy as _
 
+from .utils import generate_username
+
 User = get_user_model()
 
 try:
@@ -104,7 +106,7 @@ class RegistrationManager(models.Manager):
 
         """
         salt = hashlib.sha1(str(random.random())).hexdigest()[:5]
-        username = user.username
+        username = user.username or generate_username(user)
         if isinstance(username, unicode):
             username = username.encode('utf-8')
         activation_key = hashlib.sha1(salt+username).hexdigest()
