@@ -1,10 +1,11 @@
+This Fork with Django custom AUTH_USER_MODEL support is develop by
+Bruno Rocha <rochacbruno@gmail.com>
+
+
 The primary author of django-registration is James Bennett
 <james@b-list.org>, who may be found online at
 <http://www.b-list.org/>.
 
-
-This Fork with Django custom AUTH_USER_MODEL support is develop by
-Bruno Rocha <rochacbruno@gmail.com>
 
 Others who have contributed to the application:
 
