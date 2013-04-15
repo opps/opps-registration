@@ -88,7 +88,6 @@ class RegistrationView(BaseRegistrationView):
         else:
             site = RequestSite(request)
 
-        #todo include all fields in ceaned_data end model
         new_user = RegistrationProfile.objects.create_inactive_user(user_args, site)
 
         user_registered.send(sender=self.__class__,

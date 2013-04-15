@@ -17,7 +17,9 @@ User = get_user_model()
 
 USER_MODEL_FIELD_NAMES = [field.name for field in User._meta.fields]
 USER_REQUIRED_FIELDS = set([User.USERNAME_FIELD] + list(User.REQUIRED_FIELDS))
+
 USER_FORM_FIELDS = getattr(settings, 'USER_FORM_FIELDS', USER_REQUIRED_FIELDS)
+USER_FORM_REQUIRED_FIELDS = getattr(settings, 'USER_FORM_REQUIRED_FIELDS', USER_REQUIRED_FIELDS)
 
 required_attrs = {'class': 'required', 'required': 'required'}
 
@@ -31,7 +33,12 @@ class RegistrationFormFromUserModel(object):
         # add new fields befor exsist sields
         insert_index = 0
         for field in USER_FORM_FIELDS:
-            self.fields.insert(insert_index, field, User._meta.get_field(field).formfield())
+            formfield = User._meta.get_field(field).formfield()
+            if field in USER_FORM_REQUIRED_FIELDS:
+                formfield.required = True
+                formfield.widget.attrs['required'] = 'required'
+                formfield.widget.attrs['class'] = 'required'
+            self.fields.insert(insert_index, field, formfield)
             insert_index += 1
 
 
@@ -51,11 +58,11 @@ class RegistrationForm(RegistrationFormFromUserModel, forms.Form):
     required_css_class = 'required'
 
     password1 = forms.CharField(
-        widget=forms.PasswordInput(attrs=required_attrs, render_value=False),
+        widget=forms.PasswordInput(attrs=required_attrs, render_value=True),
         label=_("Password")
     )
     password2 = forms.CharField(
-        widget=forms.PasswordInput(attrs=required_attrs, render_value=False),
+        widget=forms.PasswordInput(attrs=required_attrs, render_value=True),
         label=_("Password (again)")
     )
 
@@ -74,17 +81,26 @@ class RegistrationForm(RegistrationFormFromUserModel, forms.Form):
         # validate if the USERNAME_FIELD does not already exists
         username_field = User.USERNAME_FIELD
 
-        lookup = {'{0}__iexact'.format(username_field): self.cleaned_data[username_field]}
-        if User.objects.filter(**lookup).exists():
-            raise forms.ValidationError(
-                _("This %s is already in use.") % username_field
-            )
+        if username_field in self.cleaned_data:
+            lookup = {'{0}__iexact'.format(username_field): self.cleaned_data[username_field]}
+            if User.objects.filter(**lookup).exists():
+                raise forms.ValidationError(
+                    _("This %s is already in use.") % username_field
+                )
 
         if username_field != 'username' and 'username' in USER_MODEL_FIELD_NAMES:
             if 'username' in self.cleaned_data:
                 # validate the username
                 if User.objects.filter(username__iexact=self.cleaned_data['username']).exists():
                     raise forms.ValidationError(_("A user with that username already exists."))
+
+        # validate every required field
+        for field in USER_FORM_REQUIRED_FIELDS:
+            verbose_name = getattr(User._meta.get_field(field), 'verbose_name', field)
+            if not self.cleaned_data.get(field, None):
+                raise forms.ValidationError(
+                    _(u"You need to fill the %s field.") % verbose_name
+                )
 
         return self.cleaned_data
 
