@@ -8,15 +8,34 @@ you're using a custom model.
 
 """
 
-
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 
 User = get_user_model()
 
+USER_MODEL_FIELD_NAMES = [field.name for field in User._meta.fields]
+USER_REQUIRED_FIELDS = set([User.USERNAME_FIELD] + list(User.REQUIRED_FIELDS))
+USER_FORM_FIELDS = getattr(settings, 'USER_FORM_FIELDS', USER_REQUIRED_FIELDS)
 
-class RegistrationForm(forms.Form):
+required_attrs = {'class': 'required', 'required': 'required'}
+
+
+class RegistrationFormFromUserModel(object):
+    """
+    Create form from django user model
+    """
+    def __init__(self, *args, **kwargs):
+        super(RegistrationFormFromUserModel, self).__init__(*args, **kwargs)
+        # add new fields befor exsist sields
+        insert_index = 0
+        for field in USER_FORM_FIELDS:
+            self.fields.insert(insert_index, field, User._meta.get_field(field).formfield())
+            insert_index += 1
+
+
+class RegistrationForm(RegistrationFormFromUserModel, forms.Form):
     """
     Form for registering a new user account.
 
@@ -31,27 +50,14 @@ class RegistrationForm(forms.Form):
     """
     required_css_class = 'required'
 
-    username = forms.RegexField(regex=r'^[\w.@+-]+$',
-                                max_length=30,
-                                label=_("Username"),
-                                error_messages={'invalid': _("This value may contain only letters, numbers and @/./+/-/_ characters.")})
-    email = forms.EmailField(label=_("E-mail"))
-    password1 = forms.CharField(widget=forms.PasswordInput,
-                                label=_("Password"))
-    password2 = forms.CharField(widget=forms.PasswordInput,
-                                label=_("Password (again)"))
-
-    def clean_username(self):
-        """
-        Validate that the username is alphanumeric and is not already
-        in use.
-
-        """
-        existing = User.objects.filter(username__iexact=self.cleaned_data['username'])
-        if existing.exists():
-            raise forms.ValidationError(_("A user with that username already exists."))
-        else:
-            return self.cleaned_data['username']
+    password1 = forms.CharField(
+        widget=forms.PasswordInput(attrs=required_attrs, render_value=False),
+        label=_("Password")
+    )
+    password2 = forms.CharField(
+        widget=forms.PasswordInput(attrs=required_attrs, render_value=False),
+        label=_("Password (again)")
+    )
 
     def clean(self):
         """
@@ -64,6 +70,22 @@ class RegistrationForm(forms.Form):
         if 'password1' in self.cleaned_data and 'password2' in self.cleaned_data:
             if self.cleaned_data['password1'] != self.cleaned_data['password2']:
                 raise forms.ValidationError(_("The two password fields didn't match."))
+
+        # validate if the USERNAME_FIELD does not already exists
+        username_field = User.USERNAME_FIELD
+
+        lookup = {'{0}__iexact'.format(username_field): self.cleaned_data[username_field]}
+        if User.objects.filter(**lookup).exists():
+            raise forms.ValidationError(
+                _("This %s is already in use.") % username_field
+            )
+
+        if username_field != 'username' and 'username' in USER_MODEL_FIELD_NAMES:
+            if 'username' in self.cleaned_data:
+                # validate the username
+                if User.objects.filter(username__iexact=self.cleaned_data['username']).exists():
+                    raise forms.ValidationError(_("A user with that username already exists."))
+
         return self.cleaned_data
 
 
@@ -105,10 +127,15 @@ class RegistrationFormNoFreeEmail(RegistrationForm):
     override the attribute ``bad_domains``.
 
     """
-    bad_domains = ['aim.com', 'aol.com', 'email.com', 'gmail.com',
-                   'googlemail.com', 'hotmail.com', 'hushmail.com',
-                   'msn.com', 'mail.ru', 'mailinator.com', 'live.com',
-                   'yahoo.com']
+
+    bad_domains = getattr(
+        settings,
+        'REGISTRATION_BAD_DOMAINS',
+        ['aim.com', 'aol.com', 'email.com', 'gmail.com',
+         'googlemail.com', 'hotmail.com', 'hushmail.com',
+         'msn.com', 'mail.ru', 'mailinator.com', 'live.com',
+         'yahoo.com']
+    )
 
     def clean_email(self):
         """

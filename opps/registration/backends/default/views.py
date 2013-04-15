@@ -1,11 +1,18 @@
 from django.conf import settings
 from django.contrib.sites.models import RequestSite
 from django.contrib.sites.models import Site
+from django.contrib.auth import get_user_model
 
 from ...signals import user_registered, user_activated
 from ...models import RegistrationProfile
 from ...views import ActivationView as BaseActivationView
 from ...views import RegistrationView as BaseRegistrationView
+
+User = get_user_model()
+
+USER_MODEL_FIELD_NAMES = [field.name for field in User._meta.fields]
+USER_REQUIRED_FIELDS = set([User.USERNAME_FIELD] + list(User.REQUIRED_FIELDS))
+USER_FORM_FIELDS = getattr(settings, 'USER_FORM_FIELDS', USER_REQUIRED_FIELDS)
 
 
 class RegistrationView(BaseRegistrationView):
@@ -71,13 +78,19 @@ class RegistrationView(BaseRegistrationView):
         class of this backend as the sender.
 
         """
-        username, email, password = cleaned_data['username'], cleaned_data['email'], cleaned_data['password1']
+        user_args = {'password': cleaned_data['password1']}
+        for field in USER_FORM_FIELDS:
+            if field in cleaned_data:
+                user_args[field] = cleaned_data[field]
+
         if Site._meta.installed:
             site = Site.objects.get_current()
         else:
             site = RequestSite(request)
-        new_user = RegistrationProfile.objects.create_inactive_user(username, email,
-                                                                    password, site)
+
+        #todo include all fields in ceaned_data end model
+        new_user = RegistrationProfile.objects.create_inactive_user(user_args, site)
+
         user_registered.send(sender=self.__class__,
                              user=new_user,
                              request=request)
