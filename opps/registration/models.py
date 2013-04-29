@@ -9,6 +9,7 @@ from django.db import models
 from django.db import transaction
 from django.template.loader import render_to_string
 from django.utils.translation import ugettext_lazy as _
+from django.core.mail import EmailMultiAlternatives
 
 from .utils import get_or_generate_username
 
@@ -266,7 +267,20 @@ class RegistrationProfile(models.Model):
         # Email subject *must not* contain newlines
         subject = ''.join(subject.splitlines())
 
-        message = render_to_string('registration/activation_email.txt',
-                                   ctx_dict)
+        message_txt = render_to_string('registration/activation_email.txt',
+                                       ctx_dict)
+        message_html = render_to_string('registration/activation_email.html',
+                                        ctx_dict)
+        message = EmailMultiAlternatives(
+            subject,
+            message_txt,
+            settings.DEFAULT_FROM_EMAIL,
+            (self.user.email,)
+        )
+        message.attach_alternative(
+            message_html,
+            'text/html'
+        )
+        message.send()
 
-        self.user.email_user(subject, message, settings.DEFAULT_FROM_EMAIL)
+        # self.user.email_user(subject, message, settings.DEFAULT_FROM_EMAIL)
