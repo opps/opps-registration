@@ -1,57 +1,56 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
-#, fuzzy
+# 
+# Translators:
+# Ellison Leão <ellisonleao@gmail.com>, 2013
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: opps\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-04-18 12:00-0300\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"PO-Revision-Date: 2013-04-23 18:52+0000\n"
+"Last-Translator: Bruno Rocha <rochacbruno@gmail.com>\n"
+"Language-Team: Portuguese (Brazil) <opps-developers@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: pt_BR\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: admin.py:23
 msgid "Activate users"
-msgstr ""
+msgstr "Usuários ativos"
 
 #: admin.py:43
-#, fuzzy
 msgid "Re-send activation emails"
 msgstr "chave de ativação"
 
 #: forms.py:62
 msgid "Password"
-msgstr ""
+msgstr "Senha"
 
 #: forms.py:66
-#, fuzzy
 msgid "Password (again)"
-msgstr "senha (novamente)"
+msgstr "Senha (novamente)"
 
 #: forms.py:79
 msgid "The two password fields didn't match."
-msgstr ""
+msgstr "As 2 senhas não conferem"
 
 #: forms.py:88
 #, python-format
 msgid "This %s is already in use."
-msgstr ""
+msgstr "Este %s já está em uso"
 
 #: forms.py:95
 msgid "A user with that username already exists."
-msgstr ""
+msgstr "Um usuário com esse nome de usuário já existe"
 
 #: forms.py:102
 #, python-format
 msgid "You need to fill the %s field."
-msgstr ""
+msgstr "Você precisa preencher o campo %s"
 
 #: forms.py:115
 msgid "I have read and agree to the Terms of Service"
@@ -65,17 +64,13 @@ msgstr "Você deve concordar com os termos para registrar-se"
 msgid ""
 "This email address is already in use. Please supply a different email "
 "address."
-msgstr ""
-"Este endereço de email já está em uso. Por favor, informe um endereço de "
-"email diferente."
+msgstr "Este endereço de email já está em uso. Por favor, informe um endereço de email diferente."
 
 #: forms.py:164
 msgid ""
 "Registration using free email addresses is prohibited. Please supply a "
 "different email address."
-msgstr ""
-"Registrar-se com contas de email gratuitos está proibido. Por favor, informe "
-"um endereço de email diferente."
+msgstr "Registrar-se com contas de email gratuitos está proibido. Por favor, informe um endereço de email diferente."
 
 #: models.py:184
 msgid "user"
@@ -96,133 +91,131 @@ msgstr "profiles de registro"
 #: templates/registration/password_change_done.html:4
 #: templates/registration/password_change_done.html:8
 msgid "Password change successful"
-msgstr ""
+msgstr "Mudança de senha realizada com sucesso!"
 
 #: templates/registration/password_change_done.html:10
 msgid "Your password was changed."
-msgstr ""
+msgstr "Sua senha foi alterada"
 
 #: templates/registration/password_change_form.html:5
 #: templates/registration/password_change_form.html:9
-#, fuzzy
 msgid "Password change"
 msgstr "senha (novamente)"
 
 #: templates/registration/password_change_form.html:11
 msgid ""
-"Please enter your old password, for security's sake, and then enter your new "
-"password twice so we can verify you typed it in correctly."
-msgstr ""
+"Please enter your old password, for security's sake, and then enter your new"
+" password twice so we can verify you typed it in correctly."
+msgstr "Por favor, digite sua senha antiga, para fins de segurança e depois coloque a sua nova senha 2 vezes para verificarmos se você digitou corretamente"
 
 #: templates/registration/password_change_form.html:16
 msgid "Old password:"
-msgstr ""
+msgstr "Senha antiga:"
 
 #: templates/registration/password_change_form.html:18
 #: templates/registration/password_reset_confirm.html:19
 msgid "New password:"
-msgstr ""
+msgstr "Nova senha:"
 
 #: templates/registration/password_change_form.html:20
 #: templates/registration/password_reset_confirm.html:21
 msgid "Confirm password:"
-msgstr ""
+msgstr "Confirme sua senha:"
 
 #: templates/registration/password_change_form.html:22
 #: templates/registration/password_reset_confirm.html:22
 msgid "Change my password"
-msgstr ""
+msgstr "Mudar minha senha"
 
 #: templates/registration/password_reset_complete.html:6
 #: templates/registration/password_reset_complete.html:10
 msgid "Password reset complete"
-msgstr ""
+msgstr "Sua senha foi redefinida com sucesso"
 
 #: templates/registration/password_reset_complete.html:12
 msgid "Your password has been set.  You may go ahead and log in now."
-msgstr ""
+msgstr "Sua senha foi alterada. Você pode fazer o login agora"
 
 #: templates/registration/password_reset_complete.html:14
 msgid "Log in"
-msgstr ""
+msgstr "Entrar"
 
 #: templates/registration/password_reset_confirm.html:6
 #: templates/registration/password_reset_form.html:6
 #: templates/registration/password_reset_form.html:10
 msgid "Password reset"
-msgstr ""
+msgstr "Resetar senha"
 
 #: templates/registration/password_reset_confirm.html:12
 msgid "Enter new password"
-msgstr ""
+msgstr "Digite uma nova senha"
 
 #: templates/registration/password_reset_confirm.html:14
 msgid ""
 "Please enter your new password twice so we can verify you typed it in "
 "correctly."
-msgstr ""
+msgstr "Por favor digite sua senha 2 vezes para verificarmos se você digitou corretamente"
 
 #: templates/registration/password_reset_confirm.html:27
 msgid "Password reset unsuccessful"
-msgstr ""
+msgstr "Ocorreu um erro ao redefinir sua senha"
 
 #: templates/registration/password_reset_confirm.html:29
 msgid ""
 "The password reset link was invalid, possibly because it has already been "
 "used.  Please request a new password reset."
-msgstr ""
+msgstr "O link  para redefinição da sua senha era inválido, possivelmente porque já deve ter sido utilizado. Favor fazer um novo pedido de reset de senha."
 
 #: templates/registration/password_reset_done.html:6
 #: templates/registration/password_reset_done.html:10
 msgid "Password reset successful"
-msgstr ""
+msgstr "Sua senha foi redefinida com sucesso"
 
 #: templates/registration/password_reset_done.html:12
 msgid ""
 "We've e-mailed you instructions for setting your password to the e-mail "
 "address you submitted. You should be receiving it shortly."
-msgstr ""
+msgstr "Nós enviamos um e-mail com instruções para você criar uma senha. Você deve recebê-lo brevemente."
 
 #: templates/registration/password_reset_email.html:2
 msgid "You're receiving this e-mail because you requested a password reset"
-msgstr ""
+msgstr "Você está recebendo este e-mail porque alguém solicitou uma redefinição de senha."
 
 #: templates/registration/password_reset_email.html:3
 #, python-format
 msgid "for your user account at %(site_name)s"
-msgstr ""
+msgstr "Para sua conta em %(site_name)s"
 
 #: templates/registration/password_reset_email.html:5
 msgid "Please go to the following page and choose a new password:"
-msgstr ""
+msgstr "Favor ir para a página seguinte e escolha uma nova senha:"
 
 #: templates/registration/password_reset_email.html:9
 msgid "Your username, in case you've forgotten:"
-msgstr ""
+msgstr "Seu nome de usuário, caso tenha esquecido:"
 
 #: templates/registration/password_reset_email.html:11
 msgid "Thanks for using our site!"
-msgstr ""
+msgstr "Obrigado por usar nosso site!"
 
 #: templates/registration/password_reset_email.html:13
 #, python-format
 msgid "The %(site_name)s team"
-msgstr ""
+msgstr "O time do %(site_name)s"
 
 #: templates/registration/password_reset_form.html:12
 msgid ""
 "Forgotten your password? Enter your e-mail address below, and we'll e-mail "
 "instructions for setting a new one."
-msgstr ""
+msgstr "Esqueceu sua senha? Digite seu e-mail abaixo e enviaremos um e-mail com instruções para você criar uma nova senha."
 
 #: templates/registration/password_reset_form.html:17
-#, fuzzy
 msgid "E-mail address:"
 msgstr "endereço de email"
 
 #: templates/registration/password_reset_form.html:17
 msgid "Reset my password"
-msgstr ""
+msgstr "Redefinir minha senha"
 
 #~ msgid "username"
 #~ msgstr "usuário"
