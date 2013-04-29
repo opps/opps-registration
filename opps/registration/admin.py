@@ -4,8 +4,10 @@ from django.contrib.sites.models import Site
 from django.utils.translation import ugettext_lazy as _
 
 from .models import RegistrationProfile
+from opps.core.admin import apply_opps_rules
 
 
+@apply_opps_rules('registration')
 class RegistrationAdmin(admin.ModelAdmin):
     actions = ['activate_users', 'resend_activation_email']
     list_display = ('user', 'activation_key_expired', 'activation_key')
