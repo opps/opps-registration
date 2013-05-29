@@ -12,6 +12,9 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django import forms
 from django.utils.translation import ugettext_lazy as _
+from django.template.loader import render_to_string
+
+from .fields import HTMLField
 
 User = get_user_model()
 
@@ -20,6 +23,7 @@ USER_REQUIRED_FIELDS = set([User.USERNAME_FIELD] + list(User.REQUIRED_FIELDS))
 
 USER_FORM_FIELDS = getattr(settings, 'USER_FORM_FIELDS', USER_REQUIRED_FIELDS)
 USER_FORM_REQUIRED_FIELDS = getattr(settings, 'USER_FORM_REQUIRED_FIELDS', USER_REQUIRED_FIELDS)
+REGISTRATION_TOS = getattr(settings, 'REGISTRATION_TOS', None)
 
 required_attrs = {'class': 'required', 'required': 'required'}
 
@@ -32,14 +36,26 @@ class RegistrationFormFromUserModel(object):
         super(RegistrationFormFromUserModel, self).__init__(*args, **kwargs)
         # add new fields befor exsist sields
         insert_index = 0
+        insert_tos = None
         for field in USER_FORM_FIELDS:
+
+            if REGISTRATION_TOS and REGISTRATION_TOS['field'] == field:
+                insert_tos = int(insert_index)
+
             formfield = User._meta.get_field(field).formfield()
             if field in USER_FORM_REQUIRED_FIELDS:
                 formfield.required = True
                 formfield.widget.attrs['required'] = 'required'
                 formfield.widget.attrs['class'] = 'required'
+
             self.fields.insert(insert_index, field, formfield)
             insert_index += 1
+
+        # Terms of service
+        if insert_tos:
+            template = REGISTRATION_TOS['template']
+            tos_field = HTMLField(html=render_to_string(template))
+            self.fields.insert(insert_tos, '', tos_field)
 
 
 class RegistrationForm(RegistrationFormFromUserModel, forms.Form):
