@@ -1,7 +1,7 @@
 [main]
 host = https://www.transifex.com
 
-[opps.registration]
+[opps-registration.registration]
 file_filter = opps/registration/locale/<lang>/LC_MESSAGES/django.po
 source_file = opps/registration/locale/en/LC_MESSAGES/django.po
 source_lang = en
