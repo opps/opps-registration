@@ -80,17 +80,14 @@ class RegistrationView(_RequestPassingFormView):
         return super(RegistrationView, self).dispatch(request, *args, **kwargs)
 
     def form_valid(self, request, form):
-        new_user = self.register(request, **form.cleaned_data)
-        success_url = self.get_success_url(request, new_user)
+        self.register(request, **form.cleaned_data)
+        success_url = reverse('registration_complete')
 
-        # success_url may be a simple string, or a tuple providing the
-        # full argument set for redirect(). Attempting to unpack it
-        # tells us which one it is.
-        try:
-            to, args, kwargs = success_url
-            return redirect(to, *args, **kwargs)
-        except ValueError:
-            return redirect(success_url)
+        if 'next' in request.GET.keys():
+            success_url = '{}?next={}'.format(success_url,
+                                              request.GET.get('next'))
+
+        return redirect(success_url)
 
     def registration_allowed(self, request):
         """
