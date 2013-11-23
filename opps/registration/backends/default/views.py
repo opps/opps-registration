@@ -11,7 +11,9 @@ from ...views import RegistrationView as BaseRegistrationView
 User = get_user_model()
 
 USER_MODEL_FIELD_NAMES = [field.name for field in User._meta.fields]
-USER_REQUIRED_FIELDS = set([User.USERNAME_FIELD] + list(User.REQUIRED_FIELDS))
+USER_REQUIRED_FIELDS = set(
+    [User.USERNAME_FIELD] + list(User.REQUIRED_FIELDS)
+)
 USER_FORM_FIELDS = getattr(settings, 'USER_FORM_FIELDS', USER_REQUIRED_FIELDS)
 
 
