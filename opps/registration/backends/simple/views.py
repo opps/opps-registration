@@ -49,6 +49,9 @@ class RegistrationView(BaseRegistrationView):
             if raw_data.get(field) is None:
                 errors[field] = [u"required"]
 
+        if not any((raw_data.get('password'), raw_data.get('password1'))):
+            errors['password'] = [u'required']
+
         registration_fields = {
             k: v for k, v in raw_data.items() if k in USER_FORM_FIELDS
         }
@@ -140,5 +143,5 @@ class RegistrationView(BaseRegistrationView):
         """
         return getattr(settings, 'REGISTRATION_OPEN', True)
 
-    def get_success_url(self, request, user):
-        return (user.get_absolute_url(), (), {})
+    def get_success_url(self, request=None, user=None):
+        return user.get_absolute_url()

@@ -32,5 +32,5 @@ urlpatterns = patterns('',
                        url(r'^register/closed/$',
                            TemplateView.as_view(template_name='registration/registration_closed.html'),
                            name='registration_disallowed'),
-                       (r'', include('registration.auth_urls')),
+                       (r'', include('opps.registration.auth_urls')),
                        )

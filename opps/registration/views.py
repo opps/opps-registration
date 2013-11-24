@@ -80,9 +80,9 @@ class RegistrationView(_RequestPassingFormView):
         return super(RegistrationView, self).dispatch(request, *args, **kwargs)
 
     def form_valid(self, request, form):
-        self.register(request, **form.cleaned_data)
-        success_url = reverse('registration_complete')
-
+        user = self.register(request, **form.cleaned_data)
+        #success_url = reverse('registration_complete')
+        success_url = self.get_success_url(user=user) or reverse('registration_complete')
         if 'next' in request.GET.keys():
             success_url = '{}?next={}'.format(success_url,
                                               request.GET.get('next'))
