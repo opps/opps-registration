@@ -77,16 +77,21 @@ class RegistrationView(_RequestPassingFormView):
         """
         if not self.registration_allowed(request):
             return redirect(self.disallowed_url)
+
+        if request.GET.get('next'):
+            request.session['next'] = request.GET.get('next')
+
         return super(RegistrationView, self).dispatch(request, *args, **kwargs)
 
     def form_valid(self, request, form):
         user = self.register(request, **form.cleaned_data)
         #success_url = reverse('registration_complete')
+        next = request.session.pop('next', None)
         success_url = self.get_success_url(user=user) or reverse('registration_complete')
-        if 'next' in request.GET.keys():
-            success_url = '{}?next={}'.format(success_url,
-                                              request.GET.get('next'))
 
+        if next or 'next' in request.GET.keys():
+            success_url = '{}?next={}'.format(success_url,
+                                              next or request.GET.get('next'))
         return redirect(success_url)
 
     def registration_allowed(self, request):
