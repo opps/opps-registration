@@ -76,6 +76,7 @@ class RegistrationView(BaseRegistrationView):
 
         if not errors:
             user = self.register(request, **cleaned_data)
+
             if user:
                 cleaned_data['id'] = user.pk
             else:
@@ -104,6 +105,7 @@ class RegistrationView(BaseRegistrationView):
         for field in USER_FORM_FIELDS:
             if field in cleaned_data:
                 user_args[field] = cleaned_data[field]
+
 
         new_user = User.objects.create_user(**user_args)
 

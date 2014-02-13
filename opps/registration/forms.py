@@ -13,7 +13,7 @@ from django.contrib.auth import get_user_model
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 from django.template.loader import render_to_string
-
+from django.core.exceptions import ValidationError
 from .fields import HTMLField
 
 User = get_user_model()
@@ -22,6 +22,7 @@ USER_MODEL_FIELD_NAMES = [field.name for field in User._meta.fields]
 USER_REQUIRED_FIELDS = set([User.USERNAME_FIELD] + list(User.REQUIRED_FIELDS))
 
 USER_FORM_FIELDS = getattr(settings, 'USER_FORM_FIELDS', USER_REQUIRED_FIELDS)
+USER_FORM_UNIQUE_FIELDS = getattr(settings, 'USER_FORM_UNIQUE_FIELDS', [])
 USER_FORM_REQUIRED_FIELDS = getattr(settings, 'USER_FORM_REQUIRED_FIELDS', USER_REQUIRED_FIELDS)
 REGISTRATION_TOS = getattr(settings, 'REGISTRATION_TOS', None)
 
@@ -116,6 +117,27 @@ class RegistrationForm(RegistrationFormFromUserModel, forms.Form):
             if not self.cleaned_data.get(field, None):
                 raise forms.ValidationError(
                     _(u"You need to fill the %s field.") % verbose_name
+                )
+
+        # call validate method for every field
+        for field in USER_FORM_FIELDS:
+            value = self.cleaned_data.get(field, None)
+            method = getattr(User, "validate_{}".format(field), None)
+            if not method:
+                continue
+            try:
+                method(value, field)
+            except ValidationError:
+                raise forms.ValidationError(
+                    _(u"%s already exists") % field
+                )
+
+
+        for field in USER_FORM_UNIQUE_FIELDS:
+            _cleaned = self.cleaned_data.get(field, None)
+            if User.objects.filter(**{field: _cleaned}).exists():
+                raise forms.ValidationError(
+                    _(u"%s already exists") % field
                 )
 
         return self.cleaned_data
