@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.core.urlresolvers import reverse
 from django.contrib.sites.models import RequestSite
 from django.contrib.sites.models import Site
 from django.contrib.auth import get_user_model
@@ -118,7 +119,7 @@ class RegistrationView(BaseRegistrationView):
         user registration.
 
         """
-        return 'registration_complete'
+        return reverse('registration_complete')
 
 
 class ActivationView(BaseActivationView):
